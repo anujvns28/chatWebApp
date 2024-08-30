@@ -1,3 +1,4 @@
+import axios from "axios";
 import { setAuthLoading } from "../../slice/auth";
 import { authEndPoints } from "../api";
 import { apiConnector } from "../apiconnector";
@@ -45,6 +46,23 @@ export const signup = async (data, dispatch) => {
     console.log("signup response....", response);
   } catch (err) {
     console.log("signup Api error....", err);
+  }
+  dispatch(setAuthLoading(false));
+};
+
+export const login = async (data, dispatch) => {
+  dispatch(setAuthLoading(true));
+  try {
+    const response = await axios({
+      method: "POST",
+      url: LOGIN_API,
+      data: data,
+      withCredentials: true,
+    });
+
+    console.log("login response....", response);
+  } catch (err) {
+    console.log("login Api error....", err);
   }
   dispatch(setAuthLoading(false));
 };

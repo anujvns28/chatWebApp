@@ -1,15 +1,34 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../slice/auth";
+import { useForm } from "react-hook-form";
+import { login } from "../service/operation/auth";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { auhtLoading } = useSelector((state) => state.auth);
 
-  dispatch(setToken("kalluu"));
+  const {
+    register,
+    getValues,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  useEffect(() => {}, []);
+  const handleForm = async (data) => {
+    await login(data, dispatch);
+  };
+
+  if (auhtLoading) {
+    return (
+      <div className="h-screen w-screen flex items-center text-black justify-center">
+        <div className="custom-loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
@@ -17,7 +36,7 @@ const Login = () => {
         <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
           Login to Your Account
         </h2>
-        <form>
+        <form onSubmit={handleSubmit(handleForm)}>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -27,12 +46,12 @@ const Login = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
+              {...register("username", { required: true })}
             />
-            {/* {
-                errors.email && 
-                <span className=' text-blue-800'>Email is required</span>
-            } */}
+            {errors.username && (
+              <span className=" text-blue-800">Email is required</span>
+            )}
           </div>
           <div className="mb-6">
             <label
@@ -45,11 +64,11 @@ const Login = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
               type="password"
               placeholder="Enter your password"
+              {...register("password", { required: true })}
             />
-            {/* {
-                errors.password && 
-                <span className='text-blue-800'>Password is required</span>
-            } */}
+            {errors.password && (
+              <span className="text-blue-800">Password is required</span>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <button

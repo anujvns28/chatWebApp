@@ -7,7 +7,7 @@ import {
   signup,
   suggestUsername,
 } from "../service/operation/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -18,13 +18,16 @@ const Signup = () => {
     formState: { errors },
     setValue,
     getValues,
+    watch,
   } = useForm();
   const [avatarUrl, setAvatarUrl] = useState();
   const [avatarError, setAvatarError] = useState(false);
-  const [email, setEmail] = useState();
   const [suggestname, setSuggestname] = useState();
-  const [username, setusername] = useState();
   const [isUniqueUsername, setIsUniqueUsername] = useState(false);
+  const [showUsernameError, setShowUsernaemError] = useState(false);
+  const watchedUsername = watch("username");
+
+  const { auhtLoading } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     const file = e.target.files[0];
@@ -35,6 +38,7 @@ const Signup = () => {
 
   // suggest username
   const handleEmailBlur = async () => {
+    const email = getValues("email");
     if (email && email.includes("@gmail.com")) {
       const result = await suggestUsername(email);
       if (result) {
@@ -43,21 +47,43 @@ const Signup = () => {
     }
   };
 
-  // check username vallied
+  // check username vallied 1
   const handleUsernameBlur = async () => {
-    console.log(username, "this is username");
-
+    const username = getValues("username");
     const result = await checkUserNameExist(username);
     if (result) {
-      console.log(result);
+      if (!result.success) setIsUniqueUsername(true);
+      setShowUsernaemError(true);
+    }
+  };
+
+  const handleUsername = async (name) => {
+    setValue("username", name);
+    const result = await checkUserNameExist(name);
+    if (result) {
+      if (!result.success) setIsUniqueUsername(true);
+      setShowUsernaemError(true);
     }
   };
 
   const handleForm = async (data) => {
-    if (!data.avatar) setAvatarError(true);
+    if (!data.avatar) {
+      setAvatarError(true);
+      return;
+    }
+
+    console.log(data, "thisi is form data");
 
     await signup(data, dispatch);
   };
+
+  if (auhtLoading) {
+    return (
+      <div className="h-screen w-screen flex items-center text-black justify-center">
+        <div className="custom-loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen p-3">
@@ -116,9 +142,8 @@ const Signup = () => {
             <input
               type="text"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Enter your name"
+              placeholder="Enter your Email"
               {...register("email", { required: true })}
-              onChange={(e) => setEmail(e.target.value)}
               onBlur={handleEmailBlur}
             />
             {errors.email && (
@@ -139,7 +164,6 @@ const Signup = () => {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               placeholder="Enter your name"
               {...register("username", { required: true })}
-              onChange={(e) => setusername(e.target.value)}
               onBlur={handleUsernameBlur}
             />
             {errors.username && (
@@ -149,7 +173,7 @@ const Signup = () => {
                 </span>
               </div>
             )}
-            {isUniqueUsername && (
+            {showUsernameError && (
               <div className="absolute top-9 right-4">
                 <span
                   className={`${
@@ -167,7 +191,7 @@ const Signup = () => {
               {suggestname.map((name, index) => {
                 return (
                   <div
-                    onClick={() => setusername(name)}
+                    onClick={() => handleUsername(name)}
                     key={index}
                     className="border bg-gray-200 cursor-pointer px-3 py-1 rounded-md"
                   >
