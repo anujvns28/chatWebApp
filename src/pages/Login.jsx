@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../slice/auth";
 import { useForm } from "react-hook-form";
 import { login } from "../service/operation/auth";
 
@@ -19,7 +18,7 @@ const Login = () => {
   } = useForm();
 
   const handleForm = async (data) => {
-    await login(data, dispatch);
+    await login(data, dispatch, navigate);
   };
 
   if (auhtLoading) {

@@ -74,7 +74,7 @@ const Signup = () => {
 
     console.log(data, "thisi is form data");
 
-    await signup(data, dispatch);
+    await signup(data, dispatch, navigate);
   };
 
   if (auhtLoading) {

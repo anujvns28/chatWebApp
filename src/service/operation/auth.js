@@ -1,7 +1,6 @@
 import axios from "axios";
-import { setAuthLoading } from "../../slice/auth";
+import { setAuthLoading, setUser } from "../../slice/auth";
 import { authEndPoints } from "../api";
-import { apiConnector } from "../apiconnector";
 
 const { CHECK_USERNAME_API, LOGIN_API, SIGNUP_API, SUGGEST_USERNAME_API } =
   authEndPoints;
@@ -9,8 +8,10 @@ const { CHECK_USERNAME_API, LOGIN_API, SIGNUP_API, SUGGEST_USERNAME_API } =
 export const checkUserNameExist = async (data) => {
   let result;
   try {
-    const response = await apiConnector("POST", CHECK_USERNAME_API, {
-      username: data,
+    const response = await axios({
+      method: "POST",
+      url: CHECK_USERNAME_API,
+      data: { username: data },
     });
     result = response.data;
 
@@ -24,8 +25,10 @@ export const checkUserNameExist = async (data) => {
 export const suggestUsername = async (data) => {
   let result;
   try {
-    const response = await apiConnector("POST", SUGGEST_USERNAME_API, {
-      email: data,
+    const response = await axios({
+      method: "POST",
+      url: SUGGEST_USERNAME_API,
+      data: { email: data },
     });
     result = response.data;
 
@@ -36,12 +39,24 @@ export const suggestUsername = async (data) => {
   return result;
 };
 
-export const signup = async (data, dispatch) => {
+export const signup = async (data, dispatch, navigate) => {
   dispatch(setAuthLoading(true));
   try {
-    const response = await apiConnector("POST", SIGNUP_API, data, {
-      "Content-Type": "multipart/form-data",
+    const response = await axios({
+      method: "POST",
+      url: SIGNUP_API,
+      data: data,
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
+
+    if (response) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      dispatch(setUser(response.data.user));
+      navigate("/");
+    }
 
     console.log("signup response....", response);
   } catch (err) {
@@ -50,7 +65,7 @@ export const signup = async (data, dispatch) => {
   dispatch(setAuthLoading(false));
 };
 
-export const login = async (data, dispatch) => {
+export const login = async (data, dispatch, navigate) => {
   dispatch(setAuthLoading(true));
   try {
     const response = await axios({
@@ -60,9 +75,17 @@ export const login = async (data, dispatch) => {
       withCredentials: true,
     });
 
+    if (response) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      dispatch(setUser(response.data.user));
+      navigate("/");
+    }
+
     console.log("login response....", response);
   } catch (err) {
     console.log("login Api error....", err);
   }
   dispatch(setAuthLoading(false));
 };
+
+

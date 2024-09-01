@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  token: "my token",
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
   auhtLoading: false,
 };
 
@@ -9,8 +11,8 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setToken(state, value) {
-      state.token = value.payload;
+    setUser(state, value) {
+      state.user = value.payload;
     },
     setAuthLoading(state, value) {
       state.auhtLoading = value.payload;
@@ -19,6 +21,6 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken, setAuthLoading } = authSlice.actions;
+export const { setUser, setAuthLoading } = authSlice.actions;
 
 export default authSlice.reducer;
