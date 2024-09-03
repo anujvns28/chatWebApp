@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<PrivateRoute element={<Home />} />} />
+        <Route path="/" element={<PrivateRoute>{<Home />}</PrivateRoute>} />
         {/* other routes can go here */}
 
         <Route path="/login" element={<Login />} />
