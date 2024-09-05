@@ -2,8 +2,13 @@ import axios from "axios";
 import { setAuthLoading, setUser } from "../../slice/auth";
 import { authEndPoints } from "../api";
 
-const { CHECK_USERNAME_API, LOGIN_API, SIGNUP_API, SUGGEST_USERNAME_API } =
-  authEndPoints;
+const {
+  CHECK_USERNAME_API,
+  LOGIN_API,
+  SIGNUP_API,
+  SUGGEST_USERNAME_API,
+  LOGOUT_API,
+} = authEndPoints;
 
 export const checkUserNameExist = async (data) => {
   let result;
@@ -84,6 +89,27 @@ export const login = async (data, dispatch, navigate) => {
     console.log("login response....", response);
   } catch (err) {
     console.log("login Api error....", err);
+  }
+  dispatch(setAuthLoading(false));
+};
+
+export const logout = async (dispatch) => {
+  dispatch(setAuthLoading(true));
+  try {
+    const response = await axios({
+      method: "GET",
+      url: LOGOUT_API,
+      withCredentials: true,
+    });
+
+    if (response) {
+      localStorage.setItem("user", null);
+      dispatch(setUser(null));
+    }
+
+    console.log("Logout response....", response);
+  } catch (err) {
+    console.log("Logut Api error....", err);
   }
   dispatch(setAuthLoading(false));
 };

@@ -5,6 +5,7 @@ export const authEndPoints = {
   SUGGEST_USERNAME_API: BASE_URL + "/auth/suggestUsername",
   SIGNUP_API: BASE_URL + "/auth/signup/",
   LOGIN_API: BASE_URL + "/auth/login",
+  LOGOUT_API: BASE_URL + "/auth/logout",
 };
 
 export const userEndPoints = {

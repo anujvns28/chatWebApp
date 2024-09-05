@@ -7,15 +7,13 @@ function PrivateRoute({ children }) {
   const navigate = useNavigate();
   console.log(user, "this is user");
 
-  // If user is authenticated, render the child components (protected content)
-  if (user) {
-    return children;
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
-  // If user is not authenticated, redirect to login page
-  useEffect(() => {
-    navigate("/login");
-  }, [navigate]);
+  // If user is authenticated, render the child components (protected content)
+  return children;
 
   return null;
 }
