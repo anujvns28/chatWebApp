@@ -103,7 +103,7 @@ export const logout = async (dispatch) => {
     });
 
     if (response) {
-      localStorage.setItem("user", null);
+      localStorage.clear();
       dispatch(setUser(null));
     }
 

@@ -10,4 +10,7 @@ export const authEndPoints = {
 
 export const userEndPoints = {
   PROFILE_API: BASE_URL + "/user/me",
+  SEARCH_USER_API: BASE_URL + "/user/searchUser",
+  SEND_FRIND_REQUEST_API: BASE_URL + "/user/sendRequest",
+  GET_ALL_NOTIFICATIONS_API: BASE_URL + "/user/allNotifaction",
 };

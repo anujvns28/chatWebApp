@@ -14,8 +14,6 @@ function PrivateRoute({ children }) {
 
   // If user is authenticated, render the child components (protected content)
   return children;
-
-  return null;
 }
 
 export default PrivateRoute;

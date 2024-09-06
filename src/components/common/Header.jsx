@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { FaPlus, FaUserGroup } from "react-icons/fa6";
+import { IoIosNotifications, IoMdSearch } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
-import { IoIosNotifications } from "react-icons/io";
-import { FaUserGroup } from "react-icons/fa6";
-import { FaPlus } from "react-icons/fa6";
-import { IoMdSearch } from "react-icons/io";
-import { logout } from "../../service/operation/auth";
 import { useDispatch } from "react-redux";
+import { logout } from "../../service/operation/auth";
+import SearchModal from "../core/notification/SearchModal";
+import Notification from "../core/notification/Notification";
 
 const Header = () => {
   const dispatch = useDispatch();
+
+  const [showNotification, setShowNotification] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
 
   //logout function
   const handleLogout = async () => {
@@ -22,7 +25,10 @@ const Header = () => {
           let'sChat
         </div>
         <div className="flex flex-row gap-5 items-center text-xl font-semibold text-white">
-          <div className="cursor-pointer">
+          <div
+            onClick={() => setShowSearchModal(true)}
+            className="cursor-pointer"
+          >
             <IoMdSearch />
           </div>
           <div className="cursor-pointer">
@@ -31,7 +37,10 @@ const Header = () => {
           <div className="cursor-pointer">
             <FaUserGroup />
           </div>
-          <div className="cursor-pointer">
+          <div
+            onClick={() => setShowNotification(true)}
+            className="cursor-pointer"
+          >
             <IoIosNotifications />
           </div>
           <div onClick={handleLogout} className="cursor-pointer">
@@ -39,6 +48,16 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {showSearchModal && (
+        <div>
+          <SearchModal
+            setShowSearchModal={setShowSearchModal}
+            showSearchModal={showSearchModal}
+          />
+        </div>
+      )}
+
+      {showNotification && <Notification />}
     </div>
   );
 };

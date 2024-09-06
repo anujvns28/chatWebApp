@@ -7,7 +7,7 @@ const Applayout = () => (WrappedComponent) => {
       <div>
         <Header />
         <div
-          className="w-full h-[calc(100vh-4rem)] grid gap-4 
+          className="w-full h-[calc(100vh-4rem)] bg-slate-300 grid gap-4 
                 grid-cols-1 md:grid-cols-2 lg:grid-cols-12"
         >
           {/* <!-- First div: Visible on all screen sizes --> */}
