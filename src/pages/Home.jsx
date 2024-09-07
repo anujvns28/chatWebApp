@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import Header from "../components/common/Header";
 import Applayout from "../components/core/layout/Applayout";
 import { useNavigate } from "react-router-dom";
+import socket from "../service/operation/socket";
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
@@ -12,6 +13,22 @@ const Home = () => {
   useEffect(() => {
     if (!user) {
       navigate("/login");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      socket.connect();
+
+      socket.on("sarkari", (s) => {
+        console.log(s, "this is socket");
+      });
+
+      socket.on("private", (s) => {
+        console.log(s, "this is private");
+      });
+
+      socket.emit("userConncted", user._id);
     }
   }, [user]);
 
