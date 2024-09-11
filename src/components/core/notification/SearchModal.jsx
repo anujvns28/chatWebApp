@@ -50,7 +50,6 @@ const searchModal = ({ setShowSearchModal, showSearchModal }) => {
   }, [showSearchModal]);
 
   // send fraind request
-
   const handleSendFraindRquest = async (userId) => {
     await sendFraindRquest(userId, dispatch);
   };
